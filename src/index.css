@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* 따뜻한 차콜 배경 — 능소화의 따뜻함을 반영 */
+    --background: 20 18% 4%;
+    --foreground: 30 25% 95%;
+
+    --card: 20 14% 8%;
+    --card-foreground: 30 25% 95%;
+
+    --popover: 20 14% 8%;
+    --popover-foreground: 30 25% 95%;
+
+    /* 능소화 코랄-오렌지 */
+    --primary: 16 80% 58%;
+    --primary-foreground: 20 18% 4%;
+
+    --secondary: 20 12% 14%;
+    --secondary-foreground: 30 25% 95%;
+
+    --muted: 20 10% 14%;
+    --muted-foreground: 25 12% 55%;
+
+    --accent: 20 12% 14%;
+    --accent-foreground: 30 25% 95%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 30 25% 95%;
+
+    --border: 20 10% 18%;
+    --input: 20 10% 18%;
+    --ring: 16 80% 58%;
+
+    --radius: 0.5rem;
+
+    /* Risk colors — 유지 */
+    --risk-low: 142 71% 45%;
+    --risk-medium: 38 92% 50%;
+    --risk-high: 0 84% 60%;
+
+    --surface: 20 12% 11%;
+    --surface-raised: 20 10% 16%;
+
+    --sidebar-background: 20 18% 4%;
+    --sidebar-foreground: 30 25% 95%;
+    --sidebar-primary: 16 80% 58%;
+    --sidebar-primary-foreground: 20 18% 4%;
+    --sidebar-accent: 20 12% 14%;
+    --sidebar-accent-foreground: 30 25% 95%;
+    --sidebar-border: 20 10% 18%;
+    --sidebar-ring: 16 80% 58%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .font-mono {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 30px -5px hsl(var(--primary) / 0.3);
+  }
+
+  .glow-line {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      hsl(var(--primary) / 0.4) 50%,
+      transparent 100%
+    );
+    height: 1px;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      135deg,
+      hsl(30 25% 95%) 0%,
+      hsl(var(--primary)) 100%
+    );
+  }
+
+  /* 그물(벼리) 패턴 — 유기적 선 모양 */
+  .net-bg {
+    background-image:
+      radial-gradient(circle at 1px 1px, hsl(var(--border) / 0.25) 1px, transparent 0);
+    background-size: 40px 40px;
+  }
+}

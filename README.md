@@ -53,7 +53,7 @@ wrangler login
 pnpm build
 
 # 배포
-wrangler pages deploy dist --project-name=byeori-neugnsohwa
+wrangler pages deploy dist --project-name=byeori-neungsohwa
 ```
 
 ### 환경 변수 설정 (Environment Variables)

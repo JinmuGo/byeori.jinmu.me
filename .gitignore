@@ -24,4 +24,8 @@ dist-ssr
 *.sw?
 
 .env
+.dev.vars
 .next/
+
+# Cloudflare Pages build output
+out/

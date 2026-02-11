@@ -6,22 +6,22 @@ import { RefreshCw, Layers, BrainCircuit } from "lucide-react";
 const risks = [
   {
     icon: RefreshCw,
-    title: "Unconscious Loops",
-    description: 'Breaking the cycle of repetitive "Fix this" prompts without understanding the root cause.',
+    title: "Context Bankruptcy",
+    description: "The 'Why' behind AI code vanishes the moment the chat window closes, leaving you with functional but mysterious debt.",
     iconBg: "bg-risk-high/10",
     iconColor: "text-risk-high",
   },
   {
     icon: Layers,
-    title: "Context Fragmentation",
-    description: "Eliminating the knowledge gap between fragmented AI conversations and your local project.",
+    title: "Legacy Fear",
+    description: "That paralyzing dread when you need to refactor AI-generated code you didn't fully write or comprehend.",
     iconBg: "bg-risk-medium/10",
     iconColor: "text-risk-medium",
   },
   {
     icon: BrainCircuit,
     title: "Technical Atrophy",
-    description: "Ensuring you maintain deep code comprehension and ownership in the AI-native era.",
+    description: "Ensuring you maintain deep architectural mastery and ownership in the age of automated generation.",
     iconBg: "bg-risk-low/10",
     iconColor: "text-risk-low",
   },
@@ -40,11 +40,11 @@ const ProblemSection = () => (
       >
         <p className="mb-3 font-mono text-sm text-primary">THE PROBLEM</p>
         <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-          The Risk of AI Autopilot
+          The Cost of Blind Delegation
         </h2>
         <p className="text-lg text-muted-foreground">
-          Traditional AI tools prioritize speed over comprehension, leading to{" "}
-          <span className="text-foreground font-medium">"Blind Delegation."</span>
+          AI speed is a trap if it outpaces your comprehension. We solve the{" "}
+          <span className="text-foreground font-medium">"Knowledge Gap"</span> in AI-assisted development.
         </p>
       </motion.div>
 

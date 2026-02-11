@@ -6,33 +6,33 @@ import { ShieldCheck, Search, ArrowLeftRight, Compass, Clock } from "lucide-reac
 const features = [
   {
     icon: ShieldCheck,
-    title: "Smart Review Gate",
-    tag: "THE GATEKEEPER",
-    description: "A cognitive speed-bump that forces deliberate review for high-impact AI changes. Risk-classified from silent pass to blocking modal.",
-  },
-  {
-    icon: Search,
-    title: "Root Cause Radar",
-    tag: "THE TEACHER",
-    description: "Identifies structural mismatches — like Schema vs. API drift — to stop mindless debugging cycles before they start.",
+    title: 'The "Why" Overlay',
+    tag: "THE TRACE",
+    description: "Hover over any code block to see the original AI conversation that birthed it. Never wonder 'why' again.",
   },
   {
     icon: ArrowLeftRight,
-    title: "Concept Bridge",
-    tag: "THE EXPANDER",
-    description: "A round-trip workflow that captures insights from Web AI and injects them as knowledge assets back into your IDE.",
+    title: "Concept Capture",
+    tag: "THE BRIDGE",
+    description: "Chrome extension to capture deep architectural decisions from Web AI (Claude/GPT) and inject them into your IDE vault.",
+  },
+  {
+    icon: Search,
+    title: "Semantic Navigation",
+    tag: "THE INTENT",
+    description: "Find code by architectural intent, not just text. 'Where is the session logic?' — Navigate instantly via vector search.",
   },
   {
     icon: Compass,
     title: "Conceptual Compass",
     tag: "THE NAVIGATOR",
-    description: "Visualizes data flow and tracks the origin of every code block through dependency mapping. Never lose context again.",
+    description: "A mental map of your system's core philosophy. Understand how everything fits together at a glance.",
   },
   {
     icon: Clock,
     title: "Context Re-boarding",
     tag: "THE RESTORER",
-    description: "A 60-second morning briefing that restores your mental state and intent from the previous session. Pick up exactly where you left off.",
+    description: "Restore your mental state in 60 seconds. A morning briefing on the 'intent' behind yesterday's AI iterations.",
   },
 ];
 
@@ -49,10 +49,10 @@ const FeaturesSection = () => (
       >
         <p className="mb-3 font-mono text-sm text-primary">CORE FEATURES</p>
         <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-          The 5 Core Guardians
+          The Lens (MVP 1.0)
         </h2>
         <p className="text-lg text-muted-foreground">
-          Five integrated systems that keep you as the commander, not the passenger.
+          Three core systems to restore your vision and control in an AI-native codebase.
         </p>
       </motion.div>
 

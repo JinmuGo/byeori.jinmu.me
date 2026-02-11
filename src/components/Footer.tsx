@@ -12,8 +12,8 @@ const Footer = () => (
             <ByeoriLogo className="h-9 w-auto text-foreground" aria-label="Byeori" />
             <span className="text-lg font-semibold text-foreground">Byeori</span>
           </div>
-          <p className="mb-1 text-sm text-muted-foreground">The AI Supervision OS.</p>
-          <p className="mb-8 text-sm text-muted-foreground/70">Reclaim your agency over complex codebases.</p>
+          <p className="mb-1 text-sm text-foreground font-medium">AI, Under Your Command.</p>
+          <p className="mb-8 text-sm text-muted-foreground/70">The Native macOS Context Layer for AI-Native Developers.</p>
 
           <p className="mb-3 font-mono text-[11px] font-medium uppercase tracking-widest text-muted-foreground">Get In Touch</p>
           <a href="mailto:contact@byeori.dev" className="inline-flex items-center gap-3 text-sm text-muted-foreground transition-colors hover:text-foreground">

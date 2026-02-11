@@ -5,8 +5,12 @@ import { motion } from "framer-motion";
 import { ArrowRight, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+
+interface WaitlistResponse {
+  success?: boolean;
+  error?: string;
+}
 
 const WaitlistForm = () => {
   const [email, setEmail] = useState("");
@@ -22,25 +26,16 @@ const WaitlistForm = () => {
     setErrorMsg("");
 
     try {
-      const { data, error } = await supabase.functions.invoke("waitlist-signup", {
-        body: { email: email.trim() },
+      const res = await fetch("/api/waitlist-signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
       });
 
-      if (error) {
-        const msg = (error as any)?.context?.body
-          ? await (error as any).context.json().catch(() => null)
-          : null;
-        if (msg?.error) {
-          setErrorMsg(msg.error);
-        } else {
-          setErrorMsg("Something went wrong. Please try again.");
-        }
-        setStatus("error");
-        return;
-      }
+      const data: WaitlistResponse = await res.json();
 
-      if (data?.error) {
-        setErrorMsg(data.error);
+      if (!res.ok || data.error) {
+        setErrorMsg(data.error || "Something went wrong. Please try again.");
         setStatus("error");
         return;
       }
@@ -50,7 +45,7 @@ const WaitlistForm = () => {
         title: "You're in!",
         description: "You've been added to the waitlist. Check your email for confirmation.",
       });
-    } catch (err: any) {
+    } catch {
       setErrorMsg("Something went wrong. Please try again.");
       setStatus("error");
     }

@@ -1,10 +1,21 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "npm:resend@2.0.0";
+interface Env {
+  RESEND_API_KEY: string;
+  RESEND_AUDIENCE_ID: string;
+}
+
+interface WaitlistRequestBody {
+  email: string;
+}
+
+interface ResendAudienceErrorResponse {
+  name?: string;
+  message?: string;
+}
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  "Access-Control-Allow-Headers": "content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
 const emailHtml = `<!DOCTYPE html>
@@ -52,13 +63,13 @@ const emailHtml = `<!DOCTYPE html>
 </body>
 </html>`;
 
-serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
+export const onRequestOptions: PagesFunction = async () => {
+  return new Response(null, { headers: corsHeaders });
+};
 
+export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
-    const { email } = await req.json();
+    const { email } = (await context.request.json()) as WaitlistRequestBody;
 
     if (!email || typeof email !== "string" || !email.includes("@")) {
       return new Response(
@@ -67,8 +78,8 @@ serve(async (req) => {
       );
     }
 
-    const resendKey = Deno.env.get("RESEND_API_KEY");
-    const audienceId = Deno.env.get("RESEND_AUDIENCE_ID");
+    const resendKey = context.env.RESEND_API_KEY;
+    const audienceId = context.env.RESEND_AUDIENCE_ID;
 
     if (!resendKey || !audienceId) {
       throw new Error("Missing Resend configuration");
@@ -89,7 +100,7 @@ serve(async (req) => {
       }
     );
 
-    const audienceData = await audienceRes.json();
+    const audienceData = (await audienceRes.json()) as ResendAudienceErrorResponse;
 
     if (!audienceRes.ok) {
       if (audienceRes.status === 409 || audienceData?.name === "validation_error") {
@@ -102,23 +113,33 @@ serve(async (req) => {
     }
 
     // Send welcome email
-    const resend = new Resend(resendKey);
-    await resend.emails.send({
-      from: "Byeori <onboarding@resend.dev>",
-      to: [normalizedEmail],
-      subject: "Thanks for joining the Byeori Waitlist! ✦",
-      html: emailHtml,
+    const emailRes = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${resendKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Byeori <onboarding@resend.dev>",
+        to: [normalizedEmail],
+        subject: "Thanks for joining the Byeori Waitlist! ✦",
+        html: emailHtml,
+      }),
     });
+
+    if (!emailRes.ok) {
+      console.error("Failed to send welcome email:", await emailRes.text());
+    }
 
     return new Response(
       JSON.stringify({ success: true }),
       { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error("Waitlist signup error:", error);
     return new Response(
       JSON.stringify({ error: "Something went wrong. Please try again." }),
       { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   }
-});
+};

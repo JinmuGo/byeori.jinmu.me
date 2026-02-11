@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const RiskDemo = () => {
-  const [reviewed, setReviewed] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
   return (
     <section id="demo" className="relative py-32">
@@ -20,10 +20,10 @@ const RiskDemo = () => {
         >
           <p className="mb-3 font-mono text-sm text-primary">INTERACTIVE DEMO</p>
           <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            See It In Action
+            Recover Lost Context
           </h2>
           <p className="text-lg text-muted-foreground">
-            Click "Approve" to simulate a Smart Review Gate clearing a high-risk change.
+            Hover over the highlighted code to see exactly how and why it was created.
           </p>
         </motion.div>
 
@@ -35,83 +35,67 @@ const RiskDemo = () => {
           className="mx-auto max-w-2xl"
         >
           <div
-            className={`overflow-hidden rounded-xl border transition-colors duration-500 ${
-              reviewed ? "border-risk-low/40 shadow-lg shadow-risk-low/5" : "border-risk-high/40 shadow-lg shadow-risk-high/5"
-            } bg-card`}
+            className="group relative overflow-hidden rounded-xl border border-primary/20 bg-card shadow-lg shadow-primary/5 transition-all duration-500"
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-border px-5 py-3">
               <div className="flex items-center gap-3">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={reviewed ? "safe" : "blocked"}
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.8, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className={`flex h-6 items-center gap-1.5 rounded-full px-2.5 text-xs font-medium ${
-                      reviewed ? "bg-risk-low/10 text-risk-low" : "bg-risk-high/10 text-risk-high"
-                    }`}
-                  >
-                    <span className={`h-1.5 w-1.5 rounded-full ${reviewed ? "bg-risk-low" : "bg-risk-high animate-pulse"}`} />
-                    {reviewed ? "Safe — Approved" : "High Risk — Blocking"}
-                  </motion.div>
-                </AnimatePresence>
+                <div className="flex h-6 items-center gap-1.5 rounded-full bg-primary/10 px-2.5 text-xs font-medium text-primary">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                  Context Layer Active
+                </div>
               </div>
-              <span className="font-mono text-xs text-muted-foreground">db-migration.sql</span>
+              <span className="font-mono text-xs text-muted-foreground">auth-utils.ts</span>
             </div>
 
             {/* Code */}
-            <div className="p-5">
+            <div className="relative p-5">
               <div className="space-y-1 font-mono text-sm">
-                <DemoLine num={1} text="ALTER TABLE users" />
+                <DemoLine num={42} text="export async function validateToken(token: string) {" />
                 <DemoLine
-                  num={2}
-                  text="  DROP COLUMN email_verified;"
-                  highlight={reviewed ? "green" : "red"}
+                  num={43}
+                  text="  const { data, error } = await supabase.auth.getUser(token);"
+                  highlight={hovered ? "green" : undefined}
                 />
-                <DemoLine num={3} text="-- Removes email verification flag" muted />
+                <DemoLine
+                  num={44}
+                  text="  if (error || !data.user) throw new Error('Invalid token');"
+                  highlight={hovered ? "green" : undefined}
+                />
+                <DemoLine num={45} text="  return data.user;" />
+                <DemoLine num={46} text="}" />
               </div>
 
-              {/* Decision note */}
+              {/* Overlay Tooltip */}
               <AnimatePresence>
-                {!reviewed && (
+                {hovered && (
                   <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="mt-4 rounded-lg border border-risk-high/20 bg-risk-high/5 px-4 py-3"
+                    initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                    className="absolute top-1/2 left-1/2 z-20 w-80 -translate-x-1/2 -translate-y-1/2 rounded-lg border border-primary/30 bg-background/95 p-4 shadow-2xl backdrop-blur-md"
                   >
-                    <p className="mb-1 text-xs font-medium text-risk-high">Decision Note</p>
-                    <p className="text-xs text-muted-foreground">
-                      This migration will permanently remove the <code className="rounded bg-surface px-1 py-0.5 text-foreground">email_verified</code> column from the users table, affecting all authentication flows.
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-primary">Origin Session</span>
+                      <span className="text-[10px] text-muted-foreground">Feb 8, 2026</span>
+                    </div>
+                    <p className="mb-3 text-xs leading-relaxed text-foreground">
+                      "I need to implement a secure token validation using the Supabase Auth helper. Make sure to handle both errors and missing user data."
                     </p>
+                    <div className="flex items-center justify-between border-t border-border pt-3">
+                      <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                        <span className="flex h-4 w-4 items-center justify-center rounded bg-primary/10 text-[9px] text-primary">C</span>
+                        Claude 3.5 • Cursor
+                      </div>
+                      <button className="text-[10px] font-semibold text-primary hover:underline">
+                        Read Full Chat →
+                      </button>
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
-
-              {/* Actions */}
-              <div className="mt-5 flex items-center justify-end gap-3">
-                {reviewed ? (
-                  <motion.button
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    onClick={() => setReviewed(false)}
-                    className="rounded-md border border-border px-4 py-1.5 font-mono text-xs text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    Reset Demo
-                  </motion.button>
-                ) : (
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => setReviewed(true)}
-                    className="rounded-md bg-primary px-5 py-2 font-mono text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-                  >
-                    ✓ Approve Change
-                  </motion.button>
-                )}
-              </div>
             </div>
           </div>
         </motion.div>

@@ -12,8 +12,8 @@ const Footer = () => (
             <ByeoriLogo className="h-9 w-auto text-foreground" aria-label="Byeori" />
             <span className="text-lg font-semibold text-foreground">Byeori</span>
           </div>
-          <p className="mb-1 text-sm text-foreground font-medium">AI, Under Your Command.</p>
-          <p className="mb-8 text-sm text-muted-foreground/70">The Native macOS Context Layer for AI-Native Developers.</p>
+          <p className="mb-1 text-sm font-medium text-foreground">AI speed with context retention.</p>
+          <p className="mb-8 text-sm text-muted-foreground/70">The local-first context layer for AI agent users.</p>
 
           <p className="mb-3 font-mono text-[11px] font-medium uppercase tracking-widest text-muted-foreground">Get In Touch</p>
           <a href="mailto:contact@byeori.dev" className="inline-flex items-center gap-3 text-sm text-muted-foreground transition-colors hover:text-foreground">
@@ -27,17 +27,18 @@ const Footer = () => (
         <div>
           <p className="mb-4 font-mono text-[11px] font-medium uppercase tracking-widest text-muted-foreground">Product</p>
           <ul className="space-y-3">
-            <li><a href="#features" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Features</a></li>
-            <li><a href="#" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Docs</a></li>
-            <li><a href="#" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Manifesto</a></li>
+            <li><a href="#features" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Core Loop</a></li>
+            <li><a href="#proof" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Proof</a></li>
+            <li><a href="#demo" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Demo</a></li>
           </ul>
         </div>
 
         <div>
-          <p className="mb-4 font-mono text-[11px] font-medium uppercase tracking-widest text-muted-foreground">Legal</p>
+          <p className="mb-4 font-mono text-[11px] font-medium uppercase tracking-widest text-muted-foreground">Resources</p>
           <ul className="space-y-3">
-            <li><a href="#" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Privacy Policy</a></li>
-            <li><a href="#" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Terms of Service</a></li>
+            <li><a href="#faq" className="text-sm text-muted-foreground transition-colors hover:text-foreground">FAQ</a></li>
+            <li><a href="#waitlist" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Join Waitlist</a></li>
+            <li><a href="#problem" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Why Now</a></li>
           </ul>
         </div>
 
@@ -45,7 +46,7 @@ const Footer = () => (
           <p className="mb-4 font-mono text-[11px] font-medium uppercase tracking-widest text-muted-foreground">Connect</p>
           <ul className="space-y-3">
             <li><a href="#" className="text-sm text-muted-foreground transition-colors hover:text-foreground">GitHub</a></li>
-            <li><a href="#" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Twitter</a></li>
+            <li><a href="#" className="text-sm text-muted-foreground transition-colors hover:text-foreground">X</a></li>
           </ul>
         </div>
       </div>

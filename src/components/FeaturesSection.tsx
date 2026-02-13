@@ -1,88 +1,96 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ShieldCheck, Search, ArrowLeftRight, Compass, Clock } from "lucide-react";
+import { useTrackSectionView } from "@/hooks/use-track-section-view";
 
-const features = [
+interface CoreLoopCard {
+  title: string;
+  tag: string;
+  description: string;
+  outcome: string;
+}
+
+const coreLoopCards: CoreLoopCard[] = [
   {
-    icon: ShieldCheck,
-    title: 'The "Why" Overlay',
-    tag: "THE TRACE",
-    description: "Hover over any code block to see the original AI conversation that birthed it. Never wonder 'why' again.",
+    title: "Adaptive Mode",
+    tag: "STEP 1",
+    description:
+      "Automatically recommends Production or Learning mode and intervention level based on your current signals.",
+    outcome: "You get the right level of guidance for the current task, not generic hand-holding.",
   },
   {
-    icon: ArrowLeftRight,
-    title: "Concept Capture",
-    tag: "THE BRIDGE",
-    description: "Chrome extension to capture deep architectural decisions from Web AI (Claude/GPT) and inject them into your IDE vault.",
+    title: "Debugging Tutor Gate",
+    tag: "STEP 2",
+    description:
+      "Guided fixes stay locked until you submit your own hypothesis and reasoning.",
+    outcome: "You stop skipping understanding and build repeatable debugging habits.",
   },
   {
-    icon: Search,
-    title: "Semantic Navigation",
-    tag: "THE INTENT",
-    description: "Find code by architectural intent, not just text. 'Where is the session logic?' — Navigate instantly via vector search.",
+    title: "Cognitive Check",
+    tag: "STEP 3",
+    description:
+      "Short concept checks score comprehension per topic and feed mastery metrics.",
+    outcome: "You can see whether understanding is improving, not just commit count.",
   },
   {
-    icon: Compass,
-    title: "Conceptual Compass",
-    tag: "THE NAVIGATOR",
-    description: "A mental map of your system's core philosophy. Understand how everything fits together at a glance.",
-  },
-  {
-    icon: Clock,
-    title: "Context Re-boarding",
-    tag: "THE RESTORER",
-    description: "Restore your mental state in 60 seconds. A morning briefing on the 'intent' behind yesterday's AI iterations.",
+    title: "Query Efficiency Dashboard",
+    tag: "STEP 4",
+    description:
+      "Tracks time-to-context, independent fix rate, mastery score, and query efficiency over time.",
+    outcome: "You can prove workflow quality gains instead of relying on gut feeling.",
   },
 ];
 
-const FeaturesSection = () => (
-  <section id="features" className="relative py-32">
-    <div className="glow-line mx-auto mb-20 w-full max-w-md" />
-    <div className="mx-auto max-w-6xl px-6">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.5 }}
-        className="mb-16 max-w-2xl"
-      >
-        <p className="mb-3 font-mono text-sm text-primary">CORE FEATURES</p>
-        <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-          The Lens (MVP 1.0)
-        </h2>
-        <p className="text-lg text-muted-foreground">
-          Three core systems to restore your vision and control in an AI-native codebase.
-        </p>
-      </motion.div>
+const FeaturesSection = () => {
+  useTrackSectionView("features");
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {features.map((feature, i) => (
-          <motion.div
-            key={feature.title}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ delay: i * 0.08, duration: 0.5 }}
-            className={`group rounded-xl border border-border/60 bg-card p-6 transition-all duration-200 hover:border-primary/30 hover:glow-primary ${
-              i >= 3 ? "lg:col-span-1" : ""
-            }`}
-          >
-            <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-                <feature.icon className="h-4.5 w-4.5 text-primary" />
+  return (
+    <section id="features" className="relative py-32">
+      <div className="glow-line mx-auto mb-20 w-full max-w-md" />
+      <div className="mx-auto max-w-6xl px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.5 }}
+          className="mb-16 max-w-3xl"
+        >
+          <p className="mb-3 font-mono text-sm text-primary">V5 CORE LOOP</p>
+          <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+            Analyze first. Fix with context. Measure what improved.
+          </h2>
+          <p className="text-lg text-muted-foreground">
+            Byeori turns AI coding from a one-shot generator into a feedback loop that compounds developer understanding.
+          </p>
+        </motion.div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          {coreLoopCards.map((card, i) => (
+            <motion.article
+              key={card.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ delay: i * 0.08, duration: 0.5 }}
+              className="group rounded-xl border border-border/60 bg-card p-6 transition-all duration-200 hover:border-primary/30 hover:glow-primary"
+            >
+              <div className="mb-4 flex items-center gap-2.5">
+                <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                <span className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                  {card.tag}
+                </span>
               </div>
-              <span className="font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-                {feature.tag}
-              </span>
-            </div>
-            <h3 className="mb-2 text-lg font-semibold text-foreground">{feature.title}</h3>
-            <p className="text-sm leading-relaxed text-muted-foreground">{feature.description}</p>
-          </motion.div>
-        ))}
+              <h3 className="mb-2 text-lg font-semibold text-foreground">{card.title}</h3>
+              <p className="mb-4 text-sm leading-relaxed text-muted-foreground">{card.description}</p>
+              <div className="rounded-md border border-border/60 bg-background/60 px-3 py-2 text-xs text-foreground/90">
+                {card.outcome}
+              </div>
+            </motion.article>
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 export default FeaturesSection;

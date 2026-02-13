@@ -6,13 +6,50 @@ import { ArrowRight, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { trackLandingEvent } from "@/lib/analytics";
 
 interface WaitlistResponse {
   success?: boolean;
   error?: string;
 }
 
-const WaitlistForm = () => {
+interface WaitlistFormProps {
+  source?: string;
+  persona?: string;
+}
+
+interface WaitlistRequestBody {
+  email: string;
+  source?: string;
+  persona?: string;
+  path?: string;
+  referrer?: string;
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_term?: string;
+  utm_content?: string;
+}
+
+const getUtmParams = (): Pick<
+  WaitlistRequestBody,
+  "utm_source" | "utm_medium" | "utm_campaign" | "utm_term" | "utm_content"
+> => {
+  if (typeof window === "undefined") return {};
+  const params = new URLSearchParams(window.location.search);
+  return {
+    utm_source: params.get("utm_source") ?? undefined,
+    utm_medium: params.get("utm_medium") ?? undefined,
+    utm_campaign: params.get("utm_campaign") ?? undefined,
+    utm_term: params.get("utm_term") ?? undefined,
+    utm_content: params.get("utm_content") ?? undefined,
+  };
+};
+
+const WaitlistForm = ({
+  source = "hero_waitlist",
+  persona = "ai_agent_user",
+}: WaitlistFormProps) => {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
@@ -24,12 +61,26 @@ const WaitlistForm = () => {
 
     setStatus("loading");
     setErrorMsg("");
+    trackLandingEvent("landing_cta_clicked", {
+      source,
+      persona,
+      value: "waitlist_submit_click",
+    });
 
     try {
+      const payload: WaitlistRequestBody = {
+        email: email.trim(),
+        source,
+        persona,
+        path: window.location.pathname,
+        referrer: document.referrer || undefined,
+        ...getUtmParams(),
+      };
+
       const res = await fetch("/api/waitlist-signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim() }),
+        body: JSON.stringify(payload),
       });
 
       const data: WaitlistResponse = await res.json();
@@ -37,10 +88,20 @@ const WaitlistForm = () => {
       if (!res.ok || data.error) {
         setErrorMsg(data.error || "Something went wrong. Please try again.");
         setStatus("error");
+        trackLandingEvent("landing_waitlist_submitted", {
+          source,
+          persona,
+          value: "error",
+        });
         return;
       }
 
       setStatus("success");
+      trackLandingEvent("landing_waitlist_submitted", {
+        source,
+        persona,
+        value: "success",
+      });
       toast({
         title: "You're in!",
         description: "You've been added to the waitlist. Check your email for confirmation.",
@@ -48,6 +109,11 @@ const WaitlistForm = () => {
     } catch {
       setErrorMsg("Something went wrong. Please try again.");
       setStatus("error");
+      trackLandingEvent("landing_waitlist_submitted", {
+        source,
+        persona,
+        value: "error",
+      });
     }
   };
 
@@ -61,7 +127,7 @@ const WaitlistForm = () => {
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20">
           <Check className="h-4 w-4 text-primary" />
         </div>
-        <p className="text-sm text-foreground">You're on the list! We'll notify you first when we launch.</p>
+        <p className="text-sm text-foreground">You're on the list. We will email your early access invite first.</p>
       </motion.div>
     );
   }
@@ -90,7 +156,7 @@ const WaitlistForm = () => {
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             <>
-              Join <ArrowRight className="h-4 w-4" />
+              Join Waitlist <ArrowRight className="h-4 w-4" />
             </>
           )}
         </Button>

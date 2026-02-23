@@ -3,9 +3,14 @@
 import { motion } from "framer-motion";
 import WaitlistForm from "@/components/WaitlistForm";
 import NetVisualization from "@/components/NetVisualization";
+import type { HeroContent } from "@/content/landing/types";
 import { useTrackSectionView } from "@/hooks/use-track-section-view";
 
-const HeroSection = () => {
+interface HeroSectionProps {
+  content: HeroContent;
+}
+
+const HeroSection = ({ content }: HeroSectionProps) => {
   useTrackSectionView("top");
 
   return (
@@ -17,24 +22,33 @@ const HeroSection = () => {
       <div className="absolute left-1/2 top-[38%] h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-[160px]" />
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
 
-      <div className="relative mx-auto flex max-w-6xl flex-col items-center px-6 pt-32 pb-20 text-center lg:pt-40">
+      <div className="relative mx-auto flex max-w-6xl flex-col items-center px-6 pb-20 pt-32 text-center lg:pt-40">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
+          className="mb-4 font-mono text-xs font-medium uppercase tracking-[0.2em] text-primary/75"
+        >
+          {content.eyebrow}
+        </motion.div>
+
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
           className="mb-6 max-w-4xl text-4xl font-bold leading-[1.1] tracking-tight text-foreground md:text-6xl lg:text-7xl"
         >
-          AI, <span className="gradient-text">Under Your Command</span>
+          {content.headline}{" "}
+          <span className="gradient-text">{content.highlightedPhrase}</span>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.6 }}
-          className="mb-8 max-w-3xl text-base leading-relaxed text-muted-foreground md:text-xl"
+          className="mb-8 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-xl"
         >
-          Byeori prevents blind fixes with an analysis-first loop: hypothesis, guided fix, and independent resolution
-          tracking. Keep speed without context debt.
+          {content.body}
         </motion.p>
 
         <motion.div
@@ -45,9 +59,7 @@ const HeroSection = () => {
           id="waitlist"
         >
           <WaitlistForm source="hero_waitlist" />
-          <p className="text-xs text-muted-foreground/70">
-            Early access includes the v5 Learning Mode and mastery dashboard.
-          </p>
+          <p className="text-xs text-muted-foreground/80">{content.disclaimer}</p>
         </motion.div>
       </div>
     </section>

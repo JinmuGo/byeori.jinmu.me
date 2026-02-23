@@ -1,36 +1,25 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { trackLandingEvent } from "@/lib/analytics";
+import { AnimatePresence, motion } from "framer-motion";
+import type { RiskDemoContent } from "@/content/landing/types";
 import { useTrackSectionView } from "@/hooks/use-track-section-view";
+import { trackLandingEvent } from "@/lib/analytics";
 
-interface DemoStep {
-  label: string;
-  lockedMessage: string;
+interface RiskDemoProps {
+  content: RiskDemoContent;
 }
 
-const demoSteps: DemoStep[] = [
-  {
-    label: "Submit hypothesis",
-    lockedMessage: "Guided fix locked until you submit your own hypothesis.",
-  },
-  {
-    label: "Review rationale",
-    lockedMessage: "Why this code path fails is shown before any patch is suggested.",
-  },
-  {
-    label: "Request guided fix",
-    lockedMessage: "Guided fix unlocks only after analysis evidence is present.",
-  },
-];
-
-const RiskDemo = () => {
+const RiskDemo = ({ content }: RiskDemoProps) => {
   const [activeStep, setActiveStep] = useState(0);
   const [overlayOpen, setOverlayOpen] = useState(false);
+
   useTrackSectionView("demo");
 
-  const statusText = useMemo(() => demoSteps[activeStep]?.lockedMessage, [activeStep]);
+  const statusText = useMemo(
+    () => content.steps[activeStep]?.lockedMessage ?? "",
+    [activeStep, content.steps],
+  );
 
   const openOverlay = (source: string) => {
     setOverlayOpen(true);
@@ -41,10 +30,14 @@ const RiskDemo = () => {
   };
 
   return (
-    <section id="demo" className="relative py-32">
+    <section id="demo" className="pitchdeck-section relative overflow-hidden py-32">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="pitchdeck-orb absolute -left-72 -top-44 h-[760px] w-[760px] opacity-85" />
+      </div>
+
       <div className="glow-line mx-auto mb-20 w-full max-w-md" />
 
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="relative mx-auto max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -52,24 +45,19 @@ const RiskDemo = () => {
           transition={{ duration: 0.5 }}
           className="mb-12 max-w-3xl"
         >
-          <p className="mb-3 font-mono text-sm text-primary">INTERACTIVE CORE LOOP</p>
-          <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            Before: blind patching.
-            <span className="block text-muted-foreground">After: analysis-first fixes with evidence.</span>
-          </h2>
-          <p className="text-lg text-muted-foreground">
-            This is the behavior shift for AI agent users: no fix suggestion until your own reasoning is captured.
-          </p>
+          <p className="mb-3 font-mono text-sm text-primary">{content.eyebrow}</p>
+          <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground md:text-5xl">{content.title}</h2>
+          <p className="text-lg text-muted-foreground">{content.description}</p>
         </motion.div>
 
         <div className="mb-8 grid gap-4 md:grid-cols-2">
-          <div className="rounded-xl border border-risk-medium/40 bg-card p-5">
-            <p className="mb-2 font-mono text-[11px] uppercase tracking-wider text-risk-medium">Before</p>
-            <p className="text-sm text-muted-foreground">"Patch this now" leads to fast output and low confidence on revisit.</p>
+          <div className="pitchdeck-card rounded-xl border border-primary/15 p-5">
+            <p className="mb-2 font-mono text-[11px] uppercase tracking-wider text-primary/75">{content.beforeLabel}</p>
+            <p className="text-sm text-muted-foreground">{content.beforeCopy}</p>
           </div>
-          <div className="rounded-xl border border-risk-low/40 bg-card p-5">
-            <p className="mb-2 font-mono text-[11px] uppercase tracking-wider text-risk-low">After</p>
-            <p className="text-sm text-muted-foreground">Hypothesis first, guided fix second, independent resolution tracked as a metric.</p>
+          <div className="pitchdeck-card rounded-xl border border-primary/30 p-5">
+            <p className="mb-2 font-mono text-[11px] uppercase tracking-wider text-primary">{content.afterLabel}</p>
+            <p className="text-sm text-muted-foreground">{content.afterCopy}</p>
           </div>
         </div>
 
@@ -81,28 +69,28 @@ const RiskDemo = () => {
           className="mx-auto max-w-3xl"
         >
           <div
-            className="group relative overflow-hidden rounded-xl border border-primary/20 bg-card shadow-lg shadow-primary/5 transition-all duration-500"
+            className="pitchdeck-card group relative overflow-hidden rounded-2xl border border-primary/25 shadow-lg shadow-primary/5 transition-all duration-500"
             onMouseEnter={() => openOverlay("demo_card_hover")}
           >
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-3">
               <div className="flex h-6 items-center gap-1.5 rounded-full bg-primary/10 px-2.5 text-xs font-medium text-primary">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                Learning mode active
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
+                Intentional friction active
               </div>
-              <span className="font-mono text-xs text-muted-foreground">debug_tutor_session.ts</span>
+              <span className="font-mono text-xs text-muted-foreground">interview_guardrail.ts</span>
             </div>
 
             <div className="relative p-5">
               <div className="mb-4 space-y-1 font-mono text-sm">
-                <DemoLine num={18} text="const hypothesis = await collectUserHypothesis();" highlight={activeStep === 0 ? "green" : undefined} />
-                <DemoLine num={19} text="if (!hypothesis) return lockGuidedFix();" highlight={activeStep === 0 ? "green" : undefined} />
-                <DemoLine num={20} text="const rationale = await explainFailureContext();" highlight={activeStep === 1 ? "green" : undefined} />
-                <DemoLine num={21} text="const guidedFix = await requestGuidedFix(rationale);" highlight={activeStep === 2 ? "green" : undefined} />
-                <DemoLine num={22} text="await recordIndependentFixEvent(sessionId);" highlight={activeStep === 2 ? "green" : undefined} />
+                <DemoLine num={18} text="const hypothesis = await collectUserHypothesis();" highlight={activeStep === 0} />
+                <DemoLine num={19} text="if (!hypothesis) return lockGuidedFix();" highlight={activeStep === 0} />
+                <DemoLine num={20} text="const rationale = await explainFailureContext();" highlight={activeStep === 1} />
+                <DemoLine num={21} text="const guidedFix = await requestGuidedFix(rationale);" highlight={activeStep === 2} />
+                <DemoLine num={22} text="await recordIndependentFixEvent(sessionId);" highlight={activeStep === 2} />
               </div>
 
               <div className="mb-4 grid gap-2 sm:grid-cols-3">
-                {demoSteps.map((step, index) => (
+                {content.steps.map((step, index) => (
                   <button
                     key={step.label}
                     type="button"
@@ -126,7 +114,7 @@ const RiskDemo = () => {
                 onClick={() => openOverlay("demo_try_gate")}
                 className="text-xs font-semibold text-primary hover:underline"
               >
-                Try analysis-first gate preview
+                {content.gateLabel}
               </button>
 
               <AnimatePresence>
@@ -166,10 +154,10 @@ const DemoLine = ({
 }: {
   num: number;
   text: string;
-  highlight?: "green";
+  highlight: boolean;
 }) => {
-  const bg = highlight === "green"
-    ? "bg-risk-low/5 border-l-2 border-risk-low/40"
+  const bg = highlight
+    ? "bg-primary/6 border-l-2 border-primary/40"
     : "border-l-2 border-transparent";
 
   return (

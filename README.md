@@ -10,7 +10,7 @@ Production deploy is automated via:
 
 - Workflow: `.github/workflows/deploy-pages.yml`
 - Trigger: push to `main` (and manual `workflow_dispatch`)
-- Deploy command: `wrangler pages deploy out --project-name=byeori-neungsohwa --branch=main`
+- Deploy command: `wrangler pages deploy out --project-name=byeori-jinmu-me --branch=main`
 
 ### Required GitHub Repository Secrets
 

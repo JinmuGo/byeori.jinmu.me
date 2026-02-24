@@ -60,4 +60,4 @@ jobs:
         run: pnpm exec wrangler whoami
 
       - name: Deploy to Cloudflare Pages (production)
-        run: pnpm exec wrangler pages deploy out --project-name=byeori-neungsohwa --branch=main
+        run: pnpm exec wrangler pages deploy out --project-name=byeori-jinmu-me --branch=main
